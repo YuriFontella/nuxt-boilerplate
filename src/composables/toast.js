@@ -12,8 +12,14 @@ export const useToast = () => {
     toast.value = { type: 'success', message }
   }
 
+  function close() {
+
+    toast.value = { close: true }
+  }
+
   return {
     error,
-    success
+    success,
+    close
   }
 }
