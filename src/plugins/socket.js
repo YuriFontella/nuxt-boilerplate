@@ -4,6 +4,8 @@ export default defineNuxtPlugin(() => {
 
   const { baseURL } = useRuntimeConfig()
 
+  if (!baseURL) return
+
   let socket
 
   let manager = new Manager(baseURL, {

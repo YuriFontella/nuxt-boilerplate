@@ -54,7 +54,7 @@ const copy = ref(null)
 
 watchEffect(() => {
 
-  if (dialog.value.open) {
+  if (dialog.value?.open) {
 
     open.value = true
 

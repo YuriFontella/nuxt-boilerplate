@@ -3,10 +3,7 @@ export default defineNuxtConfig({
     '@nuxtjs/tailwindcss'
   ],
   debug: false,
-  ssr: false,
-  experimental: {
-    treeshakeClientOnly: false
-  },
+  ssr: true,
   runtimeConfig: {
     secret: '',
     public: {
@@ -20,7 +17,7 @@ export default defineNuxtConfig({
       viewport: 'initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width',
       title: 'My App',
       meta: [
-        { name: 'description', content: 'content' }
+        { name: 'name', content: 'content' }
       ],
     },
     layoutTransition: { name: 'layout', mode: 'out-in' }
