@@ -7,8 +7,8 @@
           <div class="p-4">
             <div class="flex items-start">
               <div class="flex-shrink-0">
-                <InformationCircleIcon class="h-6 w-6 text-red-400" aria-hidden="true" v-if="toast.type === 'error'" />
-                <CheckCircleIcon class="h-6 w-6 text-green-400" aria-hidden="true" v-if="toast.type === 'success'" />
+                <InformationCircleIcon v-if="toast.type === 'error'" class="h-6 w-6 text-red-400" aria-hidden="true" />
+                <CheckCircleIcon v-if="toast.type === 'success'" class="h-6 w-6 text-green-400" aria-hidden="true" />
               </div>
               <div class="ml-3 w-0 flex-1 pt-0.5">
                 <p class="text-sm font-medium text-gray-900">
@@ -18,7 +18,7 @@
                 <p class="mt-1 text-sm text-gray-500">{{ toast.message }}</p>
               </div>
               <div class="ml-4 flex flex-shrink-0">
-                <button type="button" @click="show = false" class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2">
+                <button type="button" class="inline-flex rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2" @click="show = false">
                   <span class="sr-only">Close</span>
                   <XMarkIcon class="h-5 w-5" aria-hidden="true" />
                 </button>
@@ -31,16 +31,27 @@
 </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { XMarkIcon } from '@heroicons/vue/20/solid'
-
 import { CheckCircleIcon, InformationCircleIcon } from '@heroicons/vue/24/solid'
 
-const props = defineProps(['delay'])
+interface Props {
+  delay?: number
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  delay: 5000
+})
 
 const show = ref(false)
 
-const toast = useState('toast', () => ({
+interface ToastState {
+  type?: 'error' | 'success' | null
+  message?: string | null
+  close?: boolean
+}
+
+const toast = useState<ToastState>('toast', () => ({
   type: null,
   message: null
 }))
@@ -72,8 +83,7 @@ watchEffect(() => {
     show.value = false
 
     if (!show.value) {
-
-      toast.value = {}
+      toast.value = { type: null, message: null }
     }
 
   }, props.delay)

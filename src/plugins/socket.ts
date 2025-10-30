@@ -1,29 +1,24 @@
 import { Manager } from "socket.io-client"
+import type { Socket } from "socket.io-client"
 
 export default defineNuxtPlugin(() => {
-
-  const { baseURL } = useRuntimeConfig()
+  const { public: { baseURL } } = useRuntimeConfig()
 
   if (!baseURL) return
 
-  let socket
+  let socket: Socket | null = null
 
-  let manager = new Manager(baseURL, {
+  const manager = new Manager(baseURL as string, {
     autoConnect: false
   })
 
   socket = manager.socket("/")
 
   manager.open((e) => {
-
     if (e) {
-
       socket = null
-
     } else {
-
-      socket.connect()
-
+      socket?.connect()
     }
   })
 

@@ -5,6 +5,6 @@
   </NuxtLayout>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import LibToast from '@/components/libs/toast.vue'
 </script>

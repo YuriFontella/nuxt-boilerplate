@@ -5,15 +5,15 @@
         <UserCircleIcon class="mx-auto h-12 w-auto text-indigo-600" />
       </div>
       <form class="mt-8 space-y-6" @submit.prevent="login">
-        <input type="hidden" name="remember" value="true" />
+        <input type="hidden" name="remember" value="true" >
         <div class="-space-y-px rounded-md shadow-sm">
           <div>
             <label for="email-address" class="sr-only">E-mail</label>
-            <input v-model="email" id="email-address" name="email" type="email" class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" placeholder="E-mail" />
+            <input id="email-address" v-model="email" name="email" type="email" class="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" placeholder="E-mail" >
           </div>
           <div>
             <label for="password" class="sr-only">Senha</label>
-            <input v-model="password" id="password" name="password" type="password" class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" placeholder="Senha" />
+            <input id="password" v-model="password" name="password" type="password" class="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm" placeholder="Senha" >
           </div>
         </div>
 
@@ -30,29 +30,27 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { LockClosedIcon, UserCircleIcon } from '@heroicons/vue/20/solid'
 
-const email = ref()
-const password = ref()
+const email = ref<string>('')
+const password = ref<string>('')
 
 const toast = useToast()
 
-const cookie = useCookie('token')
+const cookie = useCookie<string | null>('token')
 
 const { $api } = useNuxtApp()
 
-const { data, execute } = useAsyncData('login', () => $api('/api/login', { method: 'post', body: { email, password } }), { immediate: false })
+const { data, execute } = useAsyncData('login', () => $api('/api/login', { method: 'post', body: { email: email.value, password: password.value } }), { immediate: false })
 
-async function login() {
-
+async function login(): Promise<void> {
   await execute()
 
   if (data.value) {
-
-    cookie.value = Date.now()
-
-    return navigateTo({ name: 'index' })
+    cookie.value = Date.now().toString()
+    await navigateTo({ name: 'index' })
+    return
   }
 
   toast.error('usuário ou senha inválidos')

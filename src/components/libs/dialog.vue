@@ -22,7 +22,7 @@
               </div>
               <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                 <button type="button" class="inline-flex w-full justify-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm" @click="open = false">Fechar</button>
-                <button type="button" class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm" @click="action" ref="cancelButtonRef">
+                <button ref="cancelButtonRef" type="button" class="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:ring-offset-2 sm:mt-0 sm:w-auto sm:text-sm" @click="action">
                   Executar
                 </button>
               </div>
@@ -34,28 +34,35 @@
   </TransitionRoot>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
 import { ExclamationTriangleIcon } from '@heroicons/vue/24/outline'
 
-const open = ref(false)
+interface DialogState {
+  open?: boolean | null
+  title?: string | null
+  message?: string | null
+  action?: (() => void) | null
+}
 
-const dialog = useState('dialog', () => ({
+const open = ref<boolean>(false)
+
+const dialog = useState<DialogState>('dialog', () => ({
   open: null,
   title: null,
   message: null
 }))
 
-async function action() {
-  return await dialog.value.action()
+async function action(): Promise<void> {
+  if (dialog.value.action) {
+    return await dialog.value.action()
+  }
 }
 
-const copy = ref(null)
+const copy = ref<DialogState | null>(null)
 
 watchEffect(() => {
-
   if (dialog.value?.open) {
-
     open.value = true
 
     dialog.value = {
@@ -65,21 +72,18 @@ watchEffect(() => {
     }
 
     copy.value = dialog.value
-
-  }
-
-  else {
-
-    dialog.value = copy.value
+  } else {
+    dialog.value = copy.value || {
+      open: null,
+      title: null,
+      message: null
+    }
 
     open.value = false
 
     if (copy.value) {
-
       copy.value = null
     }
-
   }
-
 })
 </script>

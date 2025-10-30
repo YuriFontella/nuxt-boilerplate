@@ -1,20 +1,17 @@
 export default defineNuxtPlugin(() => {
-
-  const { baseURL } = useRuntimeConfig()
-
+  const { public: { baseURL } } = useRuntimeConfig()
   const toast = useToast()
 
   const api = $fetch.create({
-    baseURL,
+    baseURL: baseURL as string,
 
     onRequest({ options }) {
-
       const cookie = useCookie('token')
 
       options.headers = options.headers || {}
 
       if (cookie.value) {
-        options.headers['x-access-token'] = cookie.value
+        (options.headers as unknown as Record<string, string>)['x-access-token'] = cookie.value
       }
     },
 

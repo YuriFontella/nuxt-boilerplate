@@ -18,10 +18,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import LibDialog from '@/components/libs/dialog.vue'
 
-const navigation = {
+interface NavigationItem {
+  name: string
+  href: string
+}
+
+interface Navigation {
+  main: NavigationItem[]
+}
+
+const navigation: Navigation = {
   main: [
     { name: 'Usuário', href: '/user' },
     { name: 'Toast', href: '/examples/toast' },
@@ -31,18 +40,17 @@ const navigation = {
 
 const route = useRoute()
 
-function logout() {
+function logout(): void {
   const cookie = useCookie('token')
 
   cookie.value = null
 
   if (!cookie.value) {
-
     navigateTo({ name: 'login' })
   }
 }
 
-const x = ref(route.path)
+const x = ref<string>(route.path)
 
 watch(route, () => {
   x.value = route.path

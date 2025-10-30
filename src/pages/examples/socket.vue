@@ -6,19 +6,20 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { CloudIcon } from '@heroicons/vue/24/solid'
+import type { User } from '@@/types/global'
 
 definePageMeta({
   layout: 'main',
   middleware: 'auth'
 })
 
-const notification = ref()
+const notification = ref<unknown>()
 
-const user = useState('user')
+const user = useState<User>('user')
 
-useSocket(user.id, (data) => {
+useSocket(user.value?.id?.toString() || '', (data: unknown) => {
   notification.value = data
 })
 </script>

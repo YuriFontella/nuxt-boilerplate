@@ -7,28 +7,28 @@
           Apresentando um toast criado com tailwind e utilizando composable para as funções
         </p>
         <div class="mt-10 flex items-center justify-center gap-x-6">
-          <button @click="success" class="rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600">
+          <button class="rounded-md bg-green-600 px-3.5 py-1.5 text-base font-semibold leading-7 text-white shadow-sm hover:bg-green-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600" @click="success">
             Sucesso
           </button>
-          <button @click="error" class="text-base font-semibold leading-7 text-red-600">Gerar um erro</button>
+          <button class="text-base font-semibold leading-7 text-red-600" @click="error">Gerar um erro</button>
         </div>
       </div>
     </div>
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: 'main'
 })
 
 const toast = useToast()
 
-function success() {
+function success(): void {
   toast.success('Eu sou um sucesso')
 }
 
-function error() {
+function error(): void {
   toast.error('Eu sou um erro')
 }
 </script>

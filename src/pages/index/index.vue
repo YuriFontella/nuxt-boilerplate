@@ -27,15 +27,24 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ArrowPathIcon, CloudArrowUpIcon, FingerPrintIcon, LockClosedIcon } from '@heroicons/vue/24/outline'
+import type { Component } from 'vue'
+import type { User } from '@@/types/global'
 
 definePageMeta({
   layout: 'main',
   middleware: 'auth'
 })
 
-const features = [
+interface Feature {
+  name: string
+  description: string
+  icon: Component
+  href: string
+}
+
+const features: Feature[] = [
   {
     name: 'Dados de uma rota',
     description:
@@ -66,5 +75,5 @@ const features = [
   },
 ]
 
-const user = useState('user')
+const user = useState<User>('user')
 </script>
